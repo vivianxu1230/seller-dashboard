@@ -36,6 +36,11 @@ module.exports = {
             options: {
               name: 'images/[hash]-[name].[ext]'
             }
+          },
+          {
+            test: /\.(png|gif|cur|jpg)$/,
+            loader: 'url-loader',
+            query: {limit: 8192}
           }
         ]
       }

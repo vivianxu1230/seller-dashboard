@@ -4,6 +4,10 @@
     url('fonts/glyphworld-flower-webfont.woff') format('woff');
 }
 
+* {
+  cursor: url('cur265.cur'), pointer;
+}
+
 body {
   font-family: sans-serif;
   margin: 30px;
@@ -39,8 +43,18 @@ h1 {
   text-align: center;
 }
 
-#flower {
+#flower1 {
   position: absolute;
   right: 0px;
   top: 2px;
+}
+
+#flower2 {
+  position: absolute;
+  left: 0px;
+  top: 2px;
+}
+
+#nav {
+  padding: 10px 10px 10px 10px;
 }
