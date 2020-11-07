@@ -36,8 +36,6 @@ function linegraph(props) {
         .range([500 - marginObj.bottom, marginObj.top])
         .domain([profitMaxMin[0], profitMaxMin[1] + 50])
 
-      // const colorScale = d3.scaleOrdinal(d3.schemePastel2).domain(marginMaxMin)
-
       const xAxis = d3.axisBottom(xScale)
       svg
         .select('.x-axis')
@@ -107,6 +105,18 @@ function linegraph(props) {
               return yScale(d.profit)
             })
         )
+
+      d3
+        .select('.legendcline')
+        .attr('transform', 'translate(0, 150)')
+        .style('font-size', '11')
+
+      d3
+        .select('.legendheaderline')
+        .attr('transform', 'translate(384, -12)')
+        .style('text-decoration', 'underline')
+
+      d3.selectAll('.key').attr('transform', 'translate(380, 10)')
     },
     [
       marginObj,
@@ -120,6 +130,12 @@ function linegraph(props) {
   return (
     <React.Fragment>
       <svg id="linegraph" width="500" height="500" ref={svgRef}>
+        <g className="legendcline">
+          {' '}
+          <text className="legendheaderline">Profit type</text>
+          <text className="key">Cumulative profit</text>
+          <text className="key">Weekly profit</text>
+        </g>
         <text fontSize="14px" x="54%" y="4%" textAnchor="middle">
           This month at a glance
         </text>{' '}

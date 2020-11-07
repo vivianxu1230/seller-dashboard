@@ -8,6 +8,7 @@ function scatterplot(props) {
   useEffect(
     () => {
       const svg = d3.select(svgRef.current)
+
       const profitMaxMin = d3.extent(data.map(elem => elem.profit))
       const daysMaxMin = d3.extent(data.map(elem => elem.days))
       const likesMaxMin = d3.extent(data.map(elem => elem.likes))
@@ -58,14 +59,24 @@ function scatterplot(props) {
 
       var legendKeys = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8]
 
-      var lineLegend = svg
+      const legendc = d3
+        .select('.legendc')
+        .attr('transform', 'translate(0, 150)')
+
+      d3
+        .select('.legendheader')
+        .attr('transform', 'translate(384, -12)')
+        .style('font-size', '11')
+        .style('text-decoration', 'underline')
+
+      var lineLegend = legendc
         .selectAll('.lineLegend')
         .data(legendKeys)
         .enter()
         .append('g')
         .attr('class', 'lineLegend')
         .attr('transform', function(d, i) {
-          return 'translate(' + 420 + ',' + i * 20 + ')'
+          return 'translate(' + 400 + ',' + i * 20 + ')'
         })
 
       lineLegend
@@ -127,6 +138,9 @@ function scatterplot(props) {
   return (
     <React.Fragment>
       <svg id="scatter" width="500" height="500" ref={svgRef}>
+        <g className="legendc">
+          <text className="legendheader">Profit margin</text>
+        </g>
         <text fontSize="14px" x="53%" y="4%" textAnchor="middle">
           Sold items mapped by days/profit
         </text>
