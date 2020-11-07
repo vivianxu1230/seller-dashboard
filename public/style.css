@@ -1,5 +1,13 @@
+@font-face {
+  font-family: 'flower';
+  src: url('fonts/glyphworld-flower-webfont.woff2') format('woff2'),
+    url('fonts/glyphworld-flower-webfont.woff') format('woff');
+}
+
 body {
   font-family: sans-serif;
+  margin: 30px;
+  background-color: #f4f3f5;
 }
 
 a {
@@ -18,4 +26,26 @@ nav a {
 form div {
   margin: 1em;
   display: inline-block;
+}
+
+#homepage {
+  display: flex;
+  justify-content: space-around;
+}
+
+h1 {
+  font-family: 'flower';
+  font-size: 56px;
+  text-align: center;
+}
+#nav {
+  display: inline;
+  padding: 0;
+  margin-right: 0;
+}
+
+#flower {
+  position: absolute;
+  right: 0px;
+  top: 2px;
 }
