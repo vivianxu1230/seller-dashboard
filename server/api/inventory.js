@@ -10,3 +10,12 @@ router.get('/', async (req, res, next) => {
     next(err)
   }
 })
+
+router.post('/', async (req, res, next) => {
+  try {
+    const newInventory = await Inventory.create(req.body)
+    res.json(newInventory)
+  } catch (err) {
+    next(err)
+  }
+})
