@@ -2,6 +2,7 @@ import React from 'react'
 import {useTable, usePagination} from 'react-table'
 import styled from 'styled-components'
 import namor from 'namor'
+import axios from 'axios'
 
 const Styles = styled.div`
   padding: 1rem;
@@ -37,42 +38,44 @@ const Styles = styled.div`
   }
 `
 
-const range = len => {
-  const arr = []
-  for (let i = 0; i < len; i++) {
-    arr.push(i)
-  }
-  return arr
-}
+// const range = (len) => {
+//   const arr = []
+//   for (let i = 0; i < len; i++) {
+//     arr.push(i)
+//   }
+//   return arr
+// }
 
-const newPerson = () => {
-  const statusChance = Math.random()
-  return {
-    firstName: namor.generate({words: 1, numbers: 0}),
-    lastName: namor.generate({words: 1, numbers: 0}),
-    age: Math.floor(Math.random() * 30),
-    visits: Math.floor(Math.random() * 100),
-    progress: Math.floor(Math.random() * 100),
-    status:
-      statusChance > 0.66
-        ? 'relationship'
-        : statusChance > 0.33 ? 'complicated' : 'single'
-  }
-}
+// const newPerson = () => {
+//   const statusChance = Math.random()
+//   return {
+//     firstName: namor.generate({words: 1, numbers: 0}),
+//     lastName: namor.generate({words: 1, numbers: 0}),
+//     age: Math.floor(Math.random() * 30),
+//     visits: Math.floor(Math.random() * 100),
+//     progress: Math.floor(Math.random() * 100),
+//     status:
+//       statusChance > 0.66
+//         ? 'relationship'
+//         : statusChance > 0.33
+//         ? 'complicated'
+//         : 'single',
+//   }
+// }
 
-function makeData(...lens) {
-  const makeDataLevel = (depth = 0) => {
-    const len = lens[depth]
-    return range(len).map(d => {
-      return {
-        ...newPerson(),
-        subRows: lens[depth + 1] ? makeDataLevel(depth + 1) : undefined
-      }
-    })
-  }
+// function makeData(...lens) {
+//   const makeDataLevel = (depth = 0) => {
+//     const len = lens[depth]
+//     return range(len).map((d) => {
+//       return {
+//         ...newPerson(),
+//         subRows: lens[depth + 1] ? makeDataLevel(depth + 1) : undefined,
+//       }
+//     })
+//   }
 
-  return makeDataLevel()
-}
+//   return makeDataLevel()
+// }
 
 const EditableCell = ({
   value: initialValue,
@@ -219,7 +222,7 @@ function Table({columns, data, updateMyData, skipPageReset}) {
   )
 }
 
-export default function inventorytable() {
+export default function inventorytable(props) {
   const columns = React.useMemo(
     () => [
       {
@@ -259,7 +262,7 @@ export default function inventorytable() {
     []
   )
 
-  const [data, setData] = React.useState(() => makeData(20))
+  const [data, setData] = React.useState([])
   const [originalData] = React.useState(data)
   const [skipPageReset, setSkipPageReset] = React.useState(false)
 
@@ -288,13 +291,13 @@ export default function inventorytable() {
   // After data chagnes, we turn the flag back off
   // so that if data actually changes when we're not
   // editing it, the page is reset
-  React.useEffect(
-    () => {
-      setSkipPageReset(false)
-    },
-    [data]
-  )
+  React.useEffect(async () => {
+    setSkipPageReset(false)
+    const response = await axios.get('api/inventory')
+    setData(response.data)
+  }, [])
 
+  console.log(data)
   // Let's add a data resetter/randomizer to help
   // illustrate that flow...
   const resetData = () => setData(originalData)
