@@ -113,10 +113,12 @@ function linegraph(props) {
 
       d3
         .select('.legendheaderline')
-        .attr('transform', 'translate(384, -12)')
+        .attr('transform', 'translate(384, -20)')
         .style('text-decoration', 'underline')
 
-      d3.selectAll('.key').attr('transform', 'translate(380, 10)')
+      d3.selectAll('.key').attr('transform', function(d, i) {
+        return 'translate(' + 400 + ',' + i * 20 + ')'
+      })
     },
     [
       marginObj,

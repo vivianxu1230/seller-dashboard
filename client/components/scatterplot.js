@@ -65,7 +65,7 @@ function scatterplot(props) {
 
       d3
         .select('.legendheader')
-        .attr('transform', 'translate(384, -12)')
+        .attr('transform', 'translate(383, -20)')
         .style('font-size', '11')
         .style('text-decoration', 'underline')
 
