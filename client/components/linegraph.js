@@ -108,17 +108,28 @@ function linegraph(props) {
 
       d3
         .select('.legendcline')
-        .attr('transform', 'translate(0, 150)')
+        .attr('transform', 'translate(0, 100)')
         .style('font-size', '11')
 
-      d3
-        .select('.legendheaderline')
-        .attr('transform', 'translate(384, -20)')
-        .style('text-decoration', 'underline')
-
       d3.selectAll('.key').attr('transform', function(d, i) {
-        return 'translate(' + 400 + ',' + i * 20 + ')'
+        return 'translate(' + 334 + ',' + i * 20 + ')'
       })
+
+      d3
+        .select('.square')
+        .attr('fill', 'black')
+        .attr('width', 10)
+        .attr('height', 10)
+        .attr('transform', 'translate(319, -8)')
+        .attr('opacity', 0.5)
+
+      d3
+        .select('.osquare')
+        .attr('fill', '  #879BAF')
+        .attr('width', 10)
+        .attr('height', 10)
+        .attr('transform', 'translate(319, 12)')
+        .attr('opacity', 0.5)
     },
     [
       marginObj,
@@ -134,7 +145,9 @@ function linegraph(props) {
       <svg id="linegraph" width="500" height="500" ref={svgRef}>
         <g className="legendcline">
           {' '}
-          <text className="legendheaderline">Profit type</text>
+          <rect className="square" />
+          <rect className="osquare" />
+          <text className="legendheaderline" />
           <text className="key">Cumulative profit</text>
           <text className="key">Weekly profit</text>
         </g>
