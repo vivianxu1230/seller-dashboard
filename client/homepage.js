@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {Scatterplot, Linegraph} from './components'
+import {Scatterplot, Linegraph, InventoryTable} from './components'
 import axios from 'axios'
 
 /**
@@ -23,8 +23,9 @@ class homepage extends Component {
   render() {
     return (
       <div id="homepage">
-        <Scatterplot sales={this.state.scatterSales} />
-        <Linegraph sales={this.state.lineSales} />
+        {/* <Scatterplot sales={this.state.scatterSales} />
+        <Linegraph sales={this.state.lineSales} /> */}
+        <InventoryTable />
       </div>
     )
   }

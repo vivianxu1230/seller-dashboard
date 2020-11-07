@@ -34,7 +34,7 @@ form div {
 
 #homepage {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-evenly;
 }
 
 h1 {
