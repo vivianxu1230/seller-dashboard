@@ -1,11 +1,16 @@
 const router = require('express').Router()
-const sequelize = require('sequelize')
+const Sequelize = require('sequelize')
+const Op = Sequelize.Op
 const {Inventory} = require('../db/models')
 module.exports = router
 
 router.get('/stock', async (req, res, next) => {
   try {
-    const inventory = await Inventory.findAll()
+    const inventory = await Inventory.findAll({
+      where: {salesId: {[Op.eq]: null}},
+      order: [['id', 'ASC']]
+    })
+
     res.json(inventory)
   } catch (err) {
     next(err)

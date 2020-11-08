@@ -4,7 +4,7 @@ const db = require('../server/db')
 // const {User} = require('../server/db/models')
 const {Inventory} = require('../server/db/models')
 const {Sale} = require('../server/db/models')
-// const {seedInventory} = require('./inventory')
+
 const seedInventory = [
   {
     dateBought: '2020-06-19',
