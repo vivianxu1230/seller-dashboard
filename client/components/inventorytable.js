@@ -1,11 +1,15 @@
 import React from 'react'
 import {useTable, usePagination} from 'react-table'
 import styled from 'styled-components'
-import namor from 'namor'
 import axios from 'axios'
 
 const Styles = styled.div`
   padding: 1rem;
+  * {
+    margin-left: auto;
+    margin-right: auto;
+    font-family: sans-serif;
+  }
   table {
     border-spacing: 0;
     border: 1px solid black;
@@ -26,6 +30,7 @@ const Styles = styled.div`
         border-right: 0;
       }
       input {
+        background-color: inherit;
         font-size: 1rem;
         padding: 0;
         margin: 0;
@@ -35,6 +40,35 @@ const Styles = styled.div`
   }
   .pagination {
     padding: 0.5rem;
+    position: relative;
+    left: 28px;
+  }
+  #tablebutton {
+    margin-left: 35px;
+  }
+  #submit {
+    box-shadow: inset 0px 1px 0px 0px #efdcfb;
+    background: linear-gradient(to bottom, #dfbdfa 5%, #ffc5da 100%);
+    background-color: #ffc5da;
+    border-radius: 6px;
+    border: 1px solid #c584f3;
+    display: inline-block;
+    cursor: pointer;
+    color: #ffffff;
+    font-family: Arial;
+    font-size: 15px;
+    text-decoration: none;
+    text-shadow: 0px 0.5px 0px #9752cc;
+    padding: 7px;
+    font-weight: bold;
+  }
+  #submit:hover {
+    background: linear-gradient(to bottom, #ffc5da 5%, #dfbdfa 100%);
+    background-color: #bc80ea;
+  }
+  #submit:active {
+    position: relative;
+    top: 1px;
   }
 `
 
@@ -117,7 +151,9 @@ function Table({columns, data, updateMyData, skipPageReset}) {
           {headerGroups.map(headerGroup => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map(column => (
-                <th {...column.getHeaderProps()}>{column.render('Header')}</th>
+                <th width={column.width} {...column.getHeaderProps()}>
+                  {column.render('Header')}
+                </th>
               ))}
             </tr>
           ))}
@@ -207,28 +243,39 @@ export default function inventorytable() {
         columns: [
           {
             Header: 'Item name',
-            accessor: 'name'
+            accessor: 'name',
+            width: 50
           },
           {
             Header: 'Date Bought',
-            accessor: 'dateBought'
+            accessor: 'dateBought',
+            width: 10
           },
           {
             Header: 'Date Listed',
-            accessor: 'dateListed'
+            accessor: 'dateListed',
+            width: 10
           },
           {
             Header: 'Location Bought',
-            accessor: 'locationBought'
+            accessor: 'locationBought',
+            width: 20
           },
           {
             Header: 'Featured?',
-            accessor: 'featured'
+            accessor: 'featured',
+            width: 10
           },
           {
             Header: 'Cost',
-            accessor: 'cost'
+            accessor: 'cost',
+            width: 10
           }
+          // {
+          //   Header: 'Notes',
+          //   accessor: 'notes',
+          //   width: 50,
+          // },
         ]
       }
     ],
@@ -236,64 +283,31 @@ export default function inventorytable() {
   )
 
   const [data, setData] = React.useState([])
-  const [originalData] = React.useState(data)
+  // const [originalData] = React.useState(data)
   const [skipPageReset, setSkipPageReset] = React.useState(false)
 
-  // We need to keep the table from resetting the pageIndex when we
-  // Update data. So we can keep track of that flag with a ref.
-
-  // When our cell renderer calls updateMyData, we'll use
-  // the rowIndex, columnId and new value to update the
-  // original data
-  const updateMyData = (rowIndex, columnId, value) => {
-    // We also turn on the flag to not reset the page
-    setSkipPageReset(true)
-    setData(old =>
-      old.map((row, index) => {
-        if (index === rowIndex) {
-          return {
-            ...old[rowIndex],
-            [columnId]: value
-          }
-        }
-        return row
-      })
-    )
-  }
-
-  // After data chagnes, we turn the flag back off
-  // so that if data actually changes when we're not
-  // editing it, the page is reset
-  React.useEffect(async () => {
-    setSkipPageReset(false)
-    const response = await axios.get('api/inventory/stock')
-    setData(response.data)
+  React.useEffect(() => {
+    async function fetchData() {
+      setSkipPageReset(false)
+      const response = await axios.get('api/inventory/stock')
+      setData(response.data)
+    }
+    fetchData()
   }, [])
-
-  // Let's add a data resetter/randomizer to help
-  // illustrate that flow...
-  const resetData = () => setData(originalData)
 
   async function updateData(d) {
     console.log(d)
     await axios.put('/api/inventory', d)
   }
 
-  console.log(data)
   return (
     <Styles>
-      <button type="button" onClick={resetData}>
-        Reset Data
-      </button>
-      <button type="button" onClick={() => updateData(data)}>
-        Submit changes
-      </button>
-      <Table
-        columns={columns}
-        data={data}
-        updateMyData={updateMyData}
-        skipPageReset={skipPageReset}
-      />
+      <Table columns={columns} data={data} skipPageReset={skipPageReset} />
+      <div id="tablebutton">
+        <button id="submit" type="button" onClick={() => updateData(data)}>
+          Submit changes
+        </button>
+      </div>
     </Styles>
   )
 }

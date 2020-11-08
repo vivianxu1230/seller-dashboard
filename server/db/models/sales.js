@@ -7,7 +7,8 @@ const Sale = db.define('sale', {
     allowNull: false
   },
   dateSold: {
-    type: Sequelize.DATEONLY
+    type: Sequelize.DATEONLY,
+    allowNull: false
   },
   dateListed: {
     type: Sequelize.DATEONLY,
@@ -24,10 +25,12 @@ const Sale = db.define('sale', {
     allowNull: false
   },
   soldPrice: {
-    type: Sequelize.DECIMAL(10, 2)
+    type: Sequelize.DECIMAL(10, 2),
+    allowNull: false
   },
   shippingCost: {
-    type: Sequelize.DECIMAL(10, 2)
+    type: Sequelize.DECIMAL(10, 2),
+    allowNull: false
   },
   likes: {
     type: Sequelize.INTEGER

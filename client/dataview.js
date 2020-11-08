@@ -1,23 +1,20 @@
 import React, {Component} from 'react'
 import {InventoryTable} from './components'
-import axios from 'axios'
-
+import {SalesTable} from './components'
 /**
  * COMPONENT
  */
 class dataview extends Component {
   constructor() {
     super()
-    this.state = {
-      data: []
-    }
   }
   async componentDidMount() {}
 
   render() {
     return (
       <div id="dataview">
-        <InventoryTable data={this.state.data} />
+        {/* <InventoryTable /> */}
+        <SalesTable />
       </div>
     )
   }

@@ -26,15 +26,33 @@ router.get('/calculated', async (req, res, next) => {
         new Date(item.dateSold),
         new Date(item.dateListed)
       ),
-      featured: item.featured,
+      featured: item.featured === true ? 'Y' : 'N',
       grossPayment: item.soldPrice * 0.871 - 0.3 - item.shippingCost,
-      profit: item.soldPrice * 0.871 - 0.3 - item.shippingCost - item.cost,
+      profit:
+        '$' +
+        (item.soldPrice * 0.871 - 0.3 - item.shippingCost - item.cost).toFixed(
+          2
+        ),
       likes: item.likes,
       margin:
-        (item.soldPrice * 0.871 - 0.3 - item.shippingCost - item.cost) /
-        (item.soldPrice * 0.871 - 0.3 - item.shippingCost)
+        Math.floor(
+          (item.soldPrice * 0.871 - 0.3 - item.shippingCost - item.cost) /
+            (item.soldPrice * 0.871 - 0.3 - item.shippingCost) *
+            100
+        ) + '%'
     }))
     res.json(calculatedSales)
+  } catch (err) {
+    next(err)
+  }
+})
+
+//new sale from inventory
+router.post('/', async (req, res, next) => {
+  try {
+    //remember to update inventory saleid to a number
+    await Sale.create(req.body)
+    res.sendStatus(204)
   } catch (err) {
     next(err)
   }
