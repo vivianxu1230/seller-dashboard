@@ -14,7 +14,7 @@ class homepage extends Component {
     }
   }
   async componentDidMount() {
-    const {data} = await axios.get('/api/sales/calculated')
+    const {data} = await axios.get('/api/sales/calculatedforchart')
     this.setState({scatterSales: data})
     const response = await axios.get('/api/sales')
     this.setState({lineSales: response.data})

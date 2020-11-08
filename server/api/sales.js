@@ -16,7 +16,7 @@ router.get('/', async (req, res, next) => {
   }
 })
 
-router.get('/calculated', async (req, res, next) => {
+router.get('/calculatedfortable', async (req, res, next) => {
   try {
     const sales = await Sale.findAll()
     const calculatedSales = sales.map(item => ({
@@ -40,6 +40,30 @@ router.get('/calculated', async (req, res, next) => {
             (item.soldPrice * 0.871 - 0.3 - item.shippingCost) *
             100
         ) + '%'
+    }))
+    res.json(calculatedSales)
+  } catch (err) {
+    next(err)
+  }
+})
+
+router.get('/calculatedforchart', async (req, res, next) => {
+  try {
+    const sales = await Sale.findAll()
+    const calculatedSales = sales.map(item => ({
+      id: item.id,
+      name: item.name,
+      days: getDifferenceInDays(
+        new Date(item.dateSold),
+        new Date(item.dateListed)
+      ),
+      featured: item.featured === true ? 'Y' : 'N',
+      grossPayment: item.soldPrice * 0.871 - 0.3 - item.shippingCost,
+      profit: item.soldPrice * 0.871 - 0.3 - item.shippingCost - item.cost,
+      likes: item.likes,
+      margin:
+        (item.soldPrice * 0.871 - 0.3 - item.shippingCost - item.cost) /
+        (item.soldPrice * 0.871 - 0.3 - item.shippingCost)
     }))
     res.json(calculatedSales)
   } catch (err) {

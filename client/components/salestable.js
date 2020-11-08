@@ -126,7 +126,7 @@ export default function salestable() {
 
   React.useEffect(() => {
     async function fetchData() {
-      const response = await axios.get('api/sales/calculated')
+      const response = await axios.get('api/sales/calculatedfortable')
       setData(response.data)
     }
     fetchData()

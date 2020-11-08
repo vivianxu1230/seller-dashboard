@@ -7,14 +7,47 @@ import {SalesTable} from './components'
 class dataview extends Component {
   constructor() {
     super()
+    this.state = {
+      selectedPage: 'salesdata'
+    }
+    this.handleClick = this.handleClick.bind(this)
   }
-  async componentDidMount() {}
+
+  handleClick(e) {
+    this.setState({selectedPage: e.target.value})
+  }
 
   render() {
     return (
       <div id="dataview">
-        {/* <InventoryTable /> */}
-        <SalesTable />
+        <div className="data-buttons-container">
+          <button
+            className="data-buttons"
+            onClick={this.handleClick}
+            value="inventory"
+            type="button"
+          >
+            Edit inventory
+          </button>
+          <button
+            className="data-buttons"
+            onClick={this.handleClick}
+            value="salesdata"
+            type="button"
+          >
+            View sales
+          </button>
+          <button
+            className="data-buttons"
+            onClick={this.handleClick}
+            value="editsales"
+            type="button"
+          >
+            Edit sales
+          </button>
+        </div>
+        {this.state.selectedPage === 'inventory' && <InventoryTable />}
+        {this.state.selectedPage === 'salesdata' && <SalesTable />}
       </div>
     )
   }

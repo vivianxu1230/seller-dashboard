@@ -22,7 +22,7 @@ class Routes extends Component {
         )} */}
 
         <Route exact path="/" component={Homepage} />
-        <Route path="/inventory" component={Dataview} />
+        <Route path="/data" component={Dataview} />
       </Switch>
     )
   }
