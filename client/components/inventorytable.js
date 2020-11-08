@@ -38,45 +38,6 @@ const Styles = styled.div`
   }
 `
 
-// const range = (len) => {
-//   const arr = []
-//   for (let i = 0; i < len; i++) {
-//     arr.push(i)
-//   }
-//   return arr
-// }
-
-// const newPerson = () => {
-//   const statusChance = Math.random()
-//   return {
-//     firstName: namor.generate({words: 1, numbers: 0}),
-//     lastName: namor.generate({words: 1, numbers: 0}),
-//     age: Math.floor(Math.random() * 30),
-//     visits: Math.floor(Math.random() * 100),
-//     progress: Math.floor(Math.random() * 100),
-//     status:
-//       statusChance > 0.66
-//         ? 'relationship'
-//         : statusChance > 0.33
-//         ? 'complicated'
-//         : 'single',
-//   }
-// }
-
-// function makeData(...lens) {
-//   const makeDataLevel = (depth = 0) => {
-//     const len = lens[depth]
-//     return range(len).map((d) => {
-//       return {
-//         ...newPerson(),
-//         subRows: lens[depth + 1] ? makeDataLevel(depth + 1) : undefined,
-//       }
-//     })
-//   }
-
-//   return makeDataLevel()
-// }
-
 const EditableCell = ({
   value: initialValue,
   row: {index},
@@ -175,16 +136,32 @@ function Table({columns, data, updateMyData, skipPageReset}) {
         </tbody>
       </table>
       <div className="pagination">
-        <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
+        <button
+          type="button"
+          onClick={() => gotoPage(0)}
+          disabled={!canPreviousPage}
+        >
           {'<<'}
         </button>{' '}
-        <button onClick={() => previousPage()} disabled={!canPreviousPage}>
+        <button
+          type="button"
+          onClick={() => previousPage()}
+          disabled={!canPreviousPage}
+        >
           {'<'}
         </button>{' '}
-        <button onClick={() => nextPage()} disabled={!canNextPage}>
+        <button
+          type="button"
+          onClick={() => nextPage()}
+          disabled={!canNextPage}
+        >
           {'>'}
         </button>{' '}
-        <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
+        <button
+          type="button"
+          onClick={() => gotoPage(pageCount - 1)}
+          disabled={!canNextPage}
+        >
           {'>>'}
         </button>{' '}
         <span>
@@ -222,7 +199,7 @@ function Table({columns, data, updateMyData, skipPageReset}) {
   )
 }
 
-export default function inventorytable(props) {
+export default function inventorytable() {
   const columns = React.useMemo(
     () => [
       {
@@ -251,10 +228,6 @@ export default function inventorytable(props) {
           {
             Header: 'Cost',
             accessor: 'cost'
-          },
-          {
-            Header: 'Sold?',
-            accessor: 'salesId'
           }
         ]
       }
@@ -293,18 +266,28 @@ export default function inventorytable(props) {
   // editing it, the page is reset
   React.useEffect(async () => {
     setSkipPageReset(false)
-    const response = await axios.get('api/inventory')
+    const response = await axios.get('api/inventory/stock')
     setData(response.data)
   }, [])
 
-  console.log(data)
   // Let's add a data resetter/randomizer to help
   // illustrate that flow...
   const resetData = () => setData(originalData)
 
+  async function updateData(d) {
+    console.log(d)
+    await axios.put('/api/inventory', d)
+  }
+
+  console.log(data)
   return (
     <Styles>
-      <button onClick={resetData}>Reset Data</button>
+      <button type="button" onClick={resetData}>
+        Reset Data
+      </button>
+      <button type="button" onClick={() => updateData(data)}>
+        Submit changes
+      </button>
       <Table
         columns={columns}
         data={data}

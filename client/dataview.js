@@ -12,10 +12,7 @@ class dataview extends Component {
       data: []
     }
   }
-  async componentDidMount() {
-    const {data} = await axios.get('/api/inventory')
-    this.setState({data})
-  }
+  async componentDidMount() {}
 
   render() {
     return (
