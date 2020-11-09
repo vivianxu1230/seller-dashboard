@@ -2,6 +2,7 @@ import React from 'react'
 import {useTable, usePagination} from 'react-table'
 import styled from 'styled-components'
 import axios from 'axios'
+import Sparkle from 'react-sparkle'
 
 const Styles = styled.div`
   padding: 1rem;
@@ -257,6 +258,7 @@ export default function inventorytable() {
   )
 
   const [data, setData] = React.useState([])
+  const [sparkleStatus, setSparkleStatus] = React.useState(false)
   // const [originalData] = React.useState(data)
   const [skipPageReset, setSkipPageReset] = React.useState(false)
 
@@ -300,7 +302,15 @@ export default function inventorytable() {
         skipPageReset={skipPageReset}
       />
       <div id="tablebutton">
-        <button id="submit" type="button" onClick={() => updateData(data)}>
+        <button
+          onMouseLeave={() => setSparkleStatus(false)}
+          onMouseEnter={() => setSparkleStatus(true)}
+          style={{position: 'relative'}}
+          id="submit"
+          type="button"
+          onClick={() => updateData(data)}
+        >
+          {sparkleStatus && <Sparkle fadeOutSpeed={20} count={20} />}
           Submit changes
         </button>
       </div>
