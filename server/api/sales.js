@@ -47,6 +47,27 @@ router.get('/calculatedfortable', async (req, res, next) => {
   }
 })
 
+router.get('/editsalesdata', async (req, res, next) => {
+  try {
+    const sales = await Sale.findAll()
+    const editSales = sales.map(item => ({
+      id: item.id,
+      name: item.name,
+      dateSold: item.dateSold,
+      dateListed: item.dateListed,
+      featured: item.featured === true ? 'Y' : 'N',
+      soldPrice: '$' + item.soldPrice,
+      cost: '$' + item.cost,
+      shippingCost: '$' + item.shippingCost,
+      likes: item.likes,
+      notes: item.notes
+    }))
+    res.json(editSales)
+  } catch (err) {
+    next(err)
+  }
+})
+
 router.get('/calculatedforchart', async (req, res, next) => {
   try {
     const sales = await Sale.findAll()

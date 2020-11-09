@@ -290,7 +290,6 @@ export default function inventorytable() {
     await axios.put('/api/inventory', d)
   }
 
-  console.log(data)
   return (
     <Styles>
       <Table

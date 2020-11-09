@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
-import {InventoryTable} from './components'
-import {SalesTable} from './components'
+import {InventoryTable, SalesTable, EditSalesTable} from './components'
+
 /**
  * COMPONENT
  */
@@ -48,6 +48,7 @@ class dataview extends Component {
         </div>
         {this.state.selectedPage === 'inventory' && <InventoryTable />}
         {this.state.selectedPage === 'salesdata' && <SalesTable />}
+        {this.state.selectedPage === 'editsales' && <EditSalesTable />}
       </div>
     )
   }
