@@ -73,20 +73,22 @@ const Styles = styled.div`
   }
 `
 
-const EditableCell = ({value: initialValue, row: {index}, column: {id}}) => {
-  // We need to keep and update the state of the cell normally
+const EditableCell = ({
+  value: initialValue,
+  row: {index},
+  column: {id},
+  updateMyData
+}) => {
   const [value, setValue] = React.useState(initialValue)
 
   const onChange = e => {
     setValue(e.target.value)
   }
 
-  // We'll only update the external data when the input is blurred
-  // const onBlur = () => {
-  //   updateMyData(index, id, value)
-  // }
+  const onBlur = () => {
+    updateMyData(index, id, value)
+  }
 
-  // If the initialValue is changed external, sync it up with our state
   React.useEffect(
     () => {
       setValue(initialValue)
@@ -94,19 +96,14 @@ const EditableCell = ({value: initialValue, row: {index}, column: {id}}) => {
     [initialValue]
   )
 
-  return <input value={value} onChange={onChange} />
+  return <input value={value} onChange={onChange} onBlur={onBlur} />
 }
 
-// Set our editable cell renderer as the default Cell renderer
 const defaultColumn = {
   Cell: EditableCell
 }
 
-// Be sure to pass our updateMyData and the skipPageReset option
-function Table({columns, data, skipPageReset}) {
-  // For this example, we're using pagination to illustrate how to stop
-  // the current page from resetting when our data changes
-  // Otherwise, nothing is different here.
+function Table({columns, data, updateMyData, skipPageReset}) {
   const {
     getTableProps,
     getTableBodyProps,
@@ -127,18 +124,12 @@ function Table({columns, data, skipPageReset}) {
       columns,
       data,
       defaultColumn,
-      // use the skipPageReset option to disable page resetting temporarily
-      autoResetPage: !skipPageReset
-      // updateMyData isn't part of the API, but
-      // anything we put into these options will
-      // automatically be available on the instance.
-      // That way we can call this function from our
-      // cell renderer!
+      autoResetPage: !skipPageReset,
+      updateMyData
     },
     usePagination
   )
 
-  // Render the UI for your table
   return (
     <>
       <table {...getTableProps()}>
@@ -146,9 +137,7 @@ function Table({columns, data, skipPageReset}) {
           {headerGroups.map(headerGroup => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map(column => (
-                <th width={column.width} {...column.getHeaderProps()}>
-                  {column.render('Header')}
-                </th>
+                <th {...column.getHeaderProps()}>{column.render('Header')}</th>
               ))}
             </tr>
           ))}
@@ -238,39 +227,28 @@ export default function inventorytable() {
         columns: [
           {
             Header: 'Item name',
-            accessor: 'name',
-            width: 50
+            accessor: 'name'
           },
           {
             Header: 'Date Bought',
-            accessor: 'dateBought',
-            width: 10
+            accessor: 'dateBought'
           },
           {
             Header: 'Date Listed',
-            accessor: 'dateListed',
-            width: 10
+            accessor: 'dateListed'
           },
           {
             Header: 'Location Bought',
-            accessor: 'locationBought',
-            width: 20
+            accessor: 'locationBought'
           },
           {
             Header: 'Featured?',
-            accessor: 'featured',
-            width: 10
+            accessor: 'featured'
           },
           {
             Header: 'Cost',
-            accessor: 'cost',
-            width: 10
+            accessor: 'cost'
           }
-          // {
-          //   Header: 'Notes',
-          //   accessor: 'notes',
-          //   width: 50,
-          // },
         ]
       }
     ],
@@ -281,6 +259,21 @@ export default function inventorytable() {
   // const [originalData] = React.useState(data)
   const [skipPageReset, setSkipPageReset] = React.useState(false)
 
+  const updateMyData = (rowIndex, columnId, value) => {
+    setSkipPageReset(true)
+    setData(old =>
+      old.map((row, index) => {
+        if (index === rowIndex) {
+          return {
+            ...old[rowIndex],
+            [columnId]: value
+          }
+        }
+        return row
+      })
+    )
+  }
+
   React.useEffect(() => {
     async function fetchData() {
       setSkipPageReset(false)
@@ -290,14 +283,22 @@ export default function inventorytable() {
     fetchData()
   }, [])
 
+  // const resetData = () => setData(originalData)
+
   async function updateData(d) {
     console.log(d)
     await axios.put('/api/inventory', d)
   }
 
+  console.log(data)
   return (
     <Styles>
-      <Table columns={columns} data={data} skipPageReset={skipPageReset} />
+      <Table
+        columns={columns}
+        data={data}
+        updateMyData={updateMyData}
+        skipPageReset={skipPageReset}
+      />
       <div id="tablebutton">
         <button id="submit" type="button" onClick={() => updateData(data)}>
           Submit changes
