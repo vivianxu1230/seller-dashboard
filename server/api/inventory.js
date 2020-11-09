@@ -20,8 +20,16 @@ router.get('/stock', async (req, res, next) => {
       where: {salesId: {[Op.eq]: null}},
       order: [['id', 'ASC']]
     })
-
-    res.json(inventory)
+    const parsedInventory = inventory.map(item => ({
+      id: item.id,
+      name: item.name,
+      dateBought: item.dateBought,
+      dateListed: item.dateListed,
+      locationBought: item.locationBought,
+      featured: item.featured === true ? 'Y' : 'N',
+      cost: '$' + item.cost
+    }))
+    res.json(parsedInventory)
   } catch (err) {
     next(err)
   }
@@ -36,5 +44,11 @@ router.put('/', async (req, res, next) => {
     res.sendStatus(204)
   } catch (err) {
     next(err)
+  }
+})
+
+Inventory.beforeUpdate(item => {
+  if (typeof item.cost === 'string' && item.cost[0] === '$') {
+    item.cost = Number(item.cost.slice(1))
   }
 })

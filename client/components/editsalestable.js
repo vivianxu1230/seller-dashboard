@@ -301,7 +301,7 @@ export default function editsalestable() {
 
   async function updateData(d) {
     console.log(d)
-    await axios.put('/api/inventory', d)
+    await axios.put('/api/sales', d)
   }
 
   return (

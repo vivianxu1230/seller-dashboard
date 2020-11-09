@@ -37,4 +37,16 @@ const Sale = db.define('sale', {
   }
 })
 
+Sale.beforeUpdate(sale => {
+  if (typeof sale.soldPrice === 'string' && sale.soldPrice[0] === '$') {
+    sale.soldPrice = Number(sale.soldPrice.slice(1))
+  }
+  if (typeof sale.cost === 'string' && sale.cost[0] === '$') {
+    sale.cost = Number(sale.cost.slice(1))
+  }
+  if (typeof sale.shippingCost === 'string' && sale.shippingCost[0] === '$') {
+    sale.shippingCost = Number(sale.shippingCost.slice(1))
+  }
+})
+
 module.exports = Sale

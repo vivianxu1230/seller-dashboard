@@ -102,3 +102,15 @@ router.get('/calculatedforchart', async (req, res, next) => {
 //     next(err)
 //   }
 // })
+
+router.put('/', async (req, res, next) => {
+  try {
+    for (let i = 0; i < req.body.length; i++) {
+      const item = await Sale.findOne({where: {id: req.body[i].id}})
+      item.update(req.body[i])
+    }
+    res.sendStatus(204)
+  } catch (err) {
+    next(err)
+  }
+})
