@@ -30,7 +30,8 @@ router.get('/stock', async (req, res, next) => {
 router.put('/', async (req, res, next) => {
   try {
     for (let i = 0; i < req.body.length; i++) {
-      await Inventory.upsert(req.body[i], {id: req.body[i].id})
+      const item = await Inventory.findOne({where: {id: req.body[i].id}})
+      item.update(req.body[i])
     }
     res.sendStatus(204)
   } catch (err) {

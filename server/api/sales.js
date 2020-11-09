@@ -71,13 +71,13 @@ router.get('/calculatedforchart', async (req, res, next) => {
   }
 })
 
-//new sale from inventory
-router.post('/', async (req, res, next) => {
-  try {
-    //remember to update inventory saleid to a number
-    await Sale.create(req.body)
-    res.sendStatus(204)
-  } catch (err) {
-    next(err)
-  }
-})
+// //new sale from inventory
+// router.post('/', async (req, res, next) => {
+//   try {
+//     //remember to update inventory saleid to a number
+//     await Sale.create(req.body)
+//     res.sendStatus(204)
+//   } catch (err) {
+//     next(err)
+//   }
+// })
