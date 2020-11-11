@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const {Sale} = require('../db/models')
+const {Sale, Inventory} = require('../db/models')
 module.exports = router
 
 function getDifferenceInDays(date1, date2) {
@@ -92,11 +92,14 @@ router.get('/calculatedforchart', async (req, res, next) => {
   }
 })
 
-// //new sale from inventory
+//new sale from inventory
 // router.post('/', async (req, res, next) => {
 //   try {
+//     console.log('hi')
 //     //remember to update inventory saleid to a number
 //     await Sale.create(req.body)
+//     const item = await Inventory.findOrCreate({where: {salesId: req.body.id}})
+//     item.update(req.body)
 //     res.sendStatus(204)
 //   } catch (err) {
 //     next(err)
@@ -106,8 +109,15 @@ router.get('/calculatedforchart', async (req, res, next) => {
 router.put('/', async (req, res, next) => {
   try {
     for (let i = 0; i < req.body.length; i++) {
-      const item = await Sale.findOne({where: {id: req.body[i].id}})
-      item.update(req.body[i])
+      if (!req.body[i].id) {
+        console.log('id not defined', req.body[i])
+        const newSale = await Sale.create(req.body[i])
+        req.body[i].salesId = newSale.dataValues.id
+        await Inventory.create(req.body[i])
+      } else {
+        const item = await Sale.findOne({where: {id: req.body[i].id}})
+        item.update(req.body[i])
+      }
     }
     res.sendStatus(204)
   } catch (err) {

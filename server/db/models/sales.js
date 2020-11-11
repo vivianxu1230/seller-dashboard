@@ -35,6 +35,9 @@ const Sale = db.define('sale', {
   likes: {
     type: Sequelize.INTEGER
   }
+  // inventoryId: {
+  //   type: Sequelize.UUID,
+  // },
 })
 
 Sale.beforeUpdate(sale => {

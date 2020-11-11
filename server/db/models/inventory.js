@@ -31,4 +31,11 @@ const Inventory = db.define('inventory', {
   }
 })
 
+// Inventory.associate = function(models) {
+//   // associations can be defined here
+//   User.hasMany(models.Post, {
+//       foreignKey: modelId
+//   );
+// };
+
 module.exports = Inventory

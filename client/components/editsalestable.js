@@ -46,7 +46,9 @@ const Styles = styled.div`
     left: 28px;
   }
   #tablebutton {
-    margin-left: 35px;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
   }
   #submit {
     margin-top: 15px;
@@ -147,6 +149,7 @@ function Table({columns, data, updateMyData, skipPageReset}) {
         <tbody {...getTableBodyProps()}>
           {page.map((row, i) => {
             prepareRow(row)
+
             return (
               <tr {...row.getRowProps()}>
                 {row.cells.map(cell => {
@@ -271,6 +274,8 @@ export default function editsalestable() {
   )
 
   const [data, setData] = React.useState([])
+  // const [newRow, setNewRow] = React.useState([])
+  const [newSale, setNewSale] = React.useState([])
   const [sparkleStatus, setSparkleStatus] = React.useState(false)
   // const [originalData] = React.useState(data)
   const [skipPageReset, setSkipPageReset] = React.useState(false)
@@ -301,9 +306,29 @@ export default function editsalestable() {
 
   // const resetData = () => setData(originalData)
 
+  function addRowToData() {
+    const newRow = data.slice()
+    newRow.push({
+      cost: '',
+      dateListed: '',
+      dateSold: '',
+      featured: '',
+      likes: '',
+      name: '',
+      notes: '',
+      shippingCost: '',
+      soldPrice: ''
+    })
+    setData(newRow)
+  }
+
   async function updateData(d) {
     console.log(d)
     await axios.put('/api/sales', d)
+  }
+  async function createNewSale(d) {
+    console.log(d)
+    await axios.post('/api/sales', d)
   }
 
   return (
@@ -326,6 +351,18 @@ export default function editsalestable() {
           {' '}
           {sparkleStatus && <Sparkle fadeOutSpeed={20} count={20} />}
           Submit changes
+        </button>
+        <button
+          onMouseLeave={() => setSparkleStatus(false)}
+          onMouseEnter={() => setSparkleStatus(true)}
+          style={{position: 'relative'}}
+          id="submit"
+          type="button"
+          onClick={() => addRowToData()}
+        >
+          {' '}
+          {sparkleStatus && <Sparkle fadeOutSpeed={20} count={20} />}
+          Add new sale item
         </button>
       </div>
     </Styles>
