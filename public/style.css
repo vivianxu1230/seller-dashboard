@@ -96,3 +96,8 @@ h1 {
   outline: none !important;
   outline-offset: none !important;
 }
+
+#ortext {
+  position: relative;
+  font-size: 14px;
+}

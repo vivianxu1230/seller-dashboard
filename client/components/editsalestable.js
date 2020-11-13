@@ -46,34 +46,15 @@ const Styles = styled.div`
     left: 28px;
   }
   #tablebutton {
+    padding-top: 1%;
     margin-left: auto;
     margin-right: auto;
     display: flex;
+    height: 50%;
   }
-  #submit {
-    margin-top: 15px;
-    box-shadow: inset 0px 1px 0px 0px #efdcfb;
-    background: linear-gradient(to bottom, #dfbdfa 5%, #ffc5da 100%);
-    background-color: #ffc5da;
-    border-radius: 6px;
-    border: 1px solid #c584f3;
-    display: inline-block;
-    cursor: pointer;
-    color: #ffffff;
-    font-family: Arial;
-    font-size: 15px;
-    text-decoration: none;
-    text-shadow: 0px 0.5px 0px #9752cc;
-    padding: 7px;
-    font-weight: bold;
+  .data-buttons {
+    height: 50%
   }
-  #submit:hover {
-    background: linear-gradient(to bottom, #ffc5da 5%, #dfbdfa 100%);
-    background-color: #bc80ea;
-  }
-  #submit:active {
-    position: relative;
-    top: 1px;
   }
 `
 
@@ -274,9 +255,8 @@ export default function editsalestable() {
   )
 
   const [data, setData] = React.useState([])
-  // const [newRow, setNewRow] = React.useState([])
-  const [newSale, setNewSale] = React.useState([])
-  const [sparkleStatus, setSparkleStatus] = React.useState(false)
+  const [selectedFile, setSelectedFile] = React.useState(null)
+  const [sparkleStatus, setSparkleStatus] = React.useState([false, null])
   // const [originalData] = React.useState(data)
   const [skipPageReset, setSkipPageReset] = React.useState(false)
 
@@ -323,12 +303,17 @@ export default function editsalestable() {
   }
 
   async function updateData(d) {
-    console.log(d)
     await axios.put('/api/sales', d)
   }
-  async function createNewSale(d) {
-    console.log(d)
-    await axios.post('/api/sales', d)
+
+  function handleChange(event) {
+    setSelectedFile(event.target.files[0])
+  }
+
+  function uploadFile() {
+    const formData = new FormData()
+    formData.append('file', selectedFile, selectedFile.name)
+    axios.post('api/uploadfile', formData)
   }
 
   return (
@@ -341,29 +326,50 @@ export default function editsalestable() {
       />
       <div id="tablebutton">
         <button
-          onMouseLeave={() => setSparkleStatus(false)}
-          onMouseEnter={() => setSparkleStatus(true)}
+          className="data-buttons"
+          onMouseLeave={() => setSparkleStatus([false, null])}
+          onMouseEnter={() => setSparkleStatus([true, 'submit'])}
           style={{position: 'relative'}}
-          id="submit"
           type="button"
           onClick={() => updateData(data)}
         >
-          {' '}
-          {sparkleStatus && <Sparkle fadeOutSpeed={20} count={20} />}
+          {sparkleStatus[0] &&
+            sparkleStatus[1] === 'submit' && (
+              <Sparkle fadeOutSpeed={20} count={20} />
+            )}
           Submit changes
         </button>
         <button
-          onMouseLeave={() => setSparkleStatus(false)}
-          onMouseEnter={() => setSparkleStatus(true)}
+          className="data-buttons"
+          onMouseLeave={() => setSparkleStatus([false, null])}
+          onMouseEnter={() => setSparkleStatus([true, 'addsale'])}
           style={{position: 'relative'}}
-          id="submit"
+          id="addsale"
           type="button"
           onClick={() => addRowToData()}
         >
-          {' '}
-          {sparkleStatus && <Sparkle fadeOutSpeed={20} count={20} />}
+          {sparkleStatus[0] &&
+            sparkleStatus[1] === 'addsale' && (
+              <Sparkle fadeOutSpeed={20} count={20} />
+            )}
           Add new sale item
         </button>
+        <p id="ortext">or upload an Excel file...</p>
+        {/* <div> */}
+        <input
+          className="data-buttons"
+          style={{textAlign: 'center'}}
+          type="file"
+          onChange={() => handleChange(event)}
+        />
+        <button
+          className="data-buttons"
+          type="button"
+          onClick={() => uploadFile()}
+        >
+          Upload
+        </button>
+        {/* </div> */}
       </div>
     </Styles>
   )

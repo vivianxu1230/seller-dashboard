@@ -9,7 +9,9 @@ function getDifferenceInDays(date1, date2) {
 
 router.get('/', async (req, res, next) => {
   try {
-    const sale = await Sale.findAll()
+    const sale = await Sale.findAll({
+      order: [['dateSold', 'ASC']]
+    })
     res.json(sale)
   } catch (err) {
     next(err)
