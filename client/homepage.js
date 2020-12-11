@@ -22,9 +22,12 @@ class homepage extends Component {
 
   render() {
     return (
-      <div id="homepage">
-        <Scatterplot sales={this.state.scatterSales} />
-        <Linegraph sales={this.state.lineSales} />
+      <div>
+        <h2 style={{textAlign: 'center'}}>Welcome, @miasmatheory!</h2>
+        <div id="homepage">
+          <Scatterplot sales={this.state.scatterSales} />
+          <Linegraph sales={this.state.lineSales} />
+        </div>
       </div>
     )
   }
